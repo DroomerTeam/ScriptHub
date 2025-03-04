@@ -202,6 +202,7 @@
 </head>
 
 <body>
+    <h1>Droomer Script Hub</h1>
 
     <!-- Search Bar -->
     <div id="search-container">
@@ -273,6 +274,11 @@
                 }, 1500);
             }).catch(err => console.error("Copy failed:", err));
         }
+
+        document.getElementById("searchButton").addEventListener("click", () => {
+            const query = document.getElementById("scriptSearch").value.toLowerCase();
+            displayScripts(allScripts.filter(script => script.title.toLowerCase().includes(query)));
+        });
 
         fetchScripts(currentPage);
     </script>
