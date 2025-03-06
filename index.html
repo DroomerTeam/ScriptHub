@@ -202,6 +202,7 @@
 </head>
 
 <body>
+    <h1>Droomer Script Hub</h1>
 
     <!-- Search Bar -->
     <div id="search-container">
@@ -233,11 +234,10 @@
         function displayScripts(scripts) {
             const scriptsContainer = document.getElementById("scripts-container");
             scriptsContainer.innerHTML = "";
-
             scripts.forEach(script => {
                 const profilePicture = script.user?.image || "https://i.pravatar.cc/300";
                 const username = script.user?.username || script.creator;
-
+                
                 const scriptElement = document.createElement("div");
                 scriptElement.classList.add("script-card");
                 scriptElement.innerHTML = `
@@ -262,6 +262,25 @@
             });
         }
 
+        document.getElementById("searchButton").addEventListener("click", () => {
+            const query = document.getElementById("scriptSearch").value.trim().toLowerCase();
+            
+            if (query === "") {
+                fetchScripts(1); // Reload all scripts if search is empty
+                return;
+            }
+
+            const filteredScripts = allScripts.filter(script => script.title.toLowerCase().includes(query));
+            displayScripts(filteredScripts);
+        });
+
+        document.getElementById("loadMore").addEventListener("click", () => {
+            if (currentPage < maxPages) {
+                currentPage++;
+                fetchScripts(currentPage);
+            }
+        });
+
         function copyScript(scriptId, button) {
             const textarea = document.getElementById(`script-${scriptId}`);
             navigator.clipboard.writeText(textarea.value).then(() => {
@@ -273,11 +292,6 @@
                 }, 1500);
             }).catch(err => console.error("Copy failed:", err));
         }
-
-        document.getElementById("searchButton").addEventListener("click", () => {
-            const query = document.getElementById("scriptSearch").value.toLowerCase();
-            displayScripts(allScripts.filter(script => script.title.toLowerCase().includes(query)));
-        });
 
         fetchScripts(currentPage);
     </script>
